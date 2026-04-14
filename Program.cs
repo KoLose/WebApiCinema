@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ContextDb>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<IMoviesGengresService, MovieGenreService>();
 builder.Services.AddScoped<IGenresService, GenreService>();
+builder.Services.AddScoped <IUsersRoles, UserRoleService>();
 
 // swagger
 builder.Services.AddEndpointsApiExplorer();

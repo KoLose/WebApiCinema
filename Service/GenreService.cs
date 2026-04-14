@@ -21,7 +21,7 @@ public class GenreService: IGenresService
         var genres = await _context.Genres.ToListAsync();
         return new OkObjectResult(new
         {
-            data = new { genres = genres },
+            data = genres,
             status = true
         });
     }

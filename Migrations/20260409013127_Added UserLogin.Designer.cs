@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebAPI.DatabaseContext;
@@ -11,9 +12,11 @@ using WebAPI.DatabaseContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ContextDb))]
-    partial class ContextDbModelSnapshot : ModelSnapshot
+    [Migration("20260409013127_Added UserLogin")]
+    partial class AddedUserLogin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,36 @@ namespace WebAPI.Migrations
                     b.HasKey("GenreID");
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Login", b =>
+                {
+                    b.Property<int>("LoginID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LoginID"));
+
+                    b.Property<string>("LoginName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("User_ID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LoginID");
+
+                    b.HasIndex("User_ID");
+
+                    b.ToTable("Logins");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Movie", b =>
@@ -100,14 +133,6 @@ namespace WebAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
 
-                    b.Property<string>("Mail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Role_ID")
                         .HasColumnType("integer");
 
@@ -120,6 +145,17 @@ namespace WebAPI.Migrations
                     b.HasIndex("Role_ID");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Login", b =>
+                {
+                    b.HasOne("WebAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("User_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Movie", b =>
