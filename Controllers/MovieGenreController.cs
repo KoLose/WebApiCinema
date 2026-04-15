@@ -22,7 +22,7 @@ public class MovieGenreController
 
     [HttpPost]
     [Route("PostMovieGenre")]
-    public async Task<IActionResult> PostMovieGenreAsync(CreateNewMovie newMovie)
+    public async Task<IActionResult> PostMovieGenreAsync([FromBody]CreateNewMovie newMovie)
     {
         return await _movieGengreService.PostMovieAsync(newMovie);
     }

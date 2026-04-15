@@ -18,10 +18,23 @@ public class UserRoleService : IUsersRoles
     
     public async Task<IActionResult> GetAllUsersAsync()
     {
-        var users = await _context.Users.ToListAsync();
+        var users = await _context.Users
+            .Include(u => u.Role)
+            .Select(u => new
+            {
+                u.UserName,
+                u.Mail,
+                u.Password,
+                Role = u.Role.RoleName
+            })
+            .ToListAsync();
+        
         return new OkObjectResult(new
         {
-            data = users,
+            data = new
+            {
+                users = users
+            },
             status = true
         });
     }
@@ -67,7 +80,7 @@ public class UserRoleService : IUsersRoles
         }
         if (action == "Login")
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => (u.UserName == newUser.UserName || u.Mail == newUser.Mail) && u.Password == newUser.Password);
+            var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Mail == newUser.Mail && u.Password == newUser.Password);
             string roleName = user.Role.RoleName;
             if (user != null)
             {

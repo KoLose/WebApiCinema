@@ -29,11 +29,15 @@ public class MovieGenreService : IMoviesGengresService
                     m.Rating,
                     m.ImageUrl,
                     Genre = m.Genre.Name  
-                }
-            ).ToListAsync();
+                }).
+            ToListAsync();
+        
         return new OkObjectResult(new
         {
-            data = new { movies = movies },
+            data = new
+            {
+                movies = movies
+            },
             status = true
         });
     }
