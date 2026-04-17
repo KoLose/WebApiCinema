@@ -9,5 +9,5 @@ public interface IUsersRolesService
     Task<IActionResult> GetAllUsersAsync();
     Task<IActionResult> PostUserAsync(CreateNewUser newUser);
     Task<IActionResult> PatchUserAsync(UpdateUser updateUser);
-    Task<IActionResult> DeleteUserAsync();
+    Task<IActionResult> DeleteUserAsync(DeleteUser deleteUser);
 }

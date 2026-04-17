@@ -43,6 +43,7 @@ public class UserRoleServiceService : IUsersRolesService
     public async Task<IActionResult> PostUserAsync(CreateNewUser newUser)
     {
         var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "User");
+        
         var action = newUser.Action;
 
         if (action == null)
@@ -75,19 +76,29 @@ public class UserRoleServiceService : IUsersRolesService
             
             return new OkObjectResult(new
             {
+                UserID = user.UserID,
+                UserName = user.UserName,
+                Mail = user.Mail,
+                Password = user.Password,
                 status = true,
             });
         }
         if (action == "Login")
         {
-            var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Mail == newUser.Mail && u.Password == newUser.Password);
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Mail == newUser.Mail && u.Password == newUser.Password);
             string roleName = user.Role.RoleName;
             if (user != null)
             {
                 return new OkObjectResult(new
                 {
+                    UserID = user.UserID,
+                    UserName = user.UserName,
+                    Mail = user.Mail,
+                    Password = user.Password,
                     status = true,
-                    role = roleName
+                    Role = roleName
                 });
             }
         }
@@ -126,11 +137,24 @@ public class UserRoleServiceService : IUsersRolesService
             status = false
         });
     }
-        public async Task<IActionResult> DeleteUserAsync()
-        {
-        return new BadRequestObjectResult(new
-        {
-            status = false
+    
+    public async Task<IActionResult> DeleteUserAsync(DeleteUser deleteUser)
+    {
+        var user  = await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.UserID == deleteUser.UserID); 
+        if (user.Role.RoleName != "Admin") 
+        { 
+            _context.Users.Remove(user); 
+            await _context.SaveChangesAsync(); 
+            return new OkObjectResult(new 
+            {
+                status = true,
+            });
+        } 
+        return new BadRequestObjectResult(new 
+        { 
+            status = false 
         });
     }
 }

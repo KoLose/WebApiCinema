@@ -26,4 +26,18 @@ public class MovieGenreController
     {
         return await _movieGengreService.PostMovieAsync(newMovie);
     }
+
+    [HttpPatch]
+    [Route("PatchMovieGenre")]
+    public async Task<IActionResult> PatchMovieGenreAsync([FromBody] UpdateMovie updateMovie)
+    {
+        return await _movieGengreService.PatchMovieAsync(updateMovie);
+    }
+
+    [HttpDelete]
+    [Route("DeleteMovieGenre")]
+    public async Task<IActionResult> DeleteMovieGenreAsync([FromBody] DeleteMovie deleteMovie)
+    {
+        return await _movieGengreService.DeleteMovieAsync(deleteMovie);
+    }
 }

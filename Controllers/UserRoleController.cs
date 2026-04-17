@@ -31,13 +31,14 @@ public class UserRoleController : ControllerBase
     [Route("PatchUserRole")]
     public async Task<IActionResult> PatchUserAsync([FromBody] UpdateUser updateUser)
     {
+        
         return await _usersRolesService.PatchUserAsync(updateUser);
     }
     
     [HttpDelete]
     [Route("DeleteUserRole")]
-    public async Task<IActionResult> DeleteUserAsync()
+    public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUser deleteUser)
     {
-        return await _usersRolesService.DeleteUserAsync();
+        return await _usersRolesService.DeleteUserAsync(deleteUser);
     }
 }

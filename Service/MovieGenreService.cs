@@ -47,7 +47,7 @@ public class MovieGenreService : IMoviesGengresService
         var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == newMovie.Name);
         if (genre == null)
         {
-            return new OkObjectResult(new
+            return new BadRequestObjectResult(new
             {
                 status = false
             });
@@ -67,6 +67,40 @@ public class MovieGenreService : IMoviesGengresService
         
         return new OkObjectResult(new 
         { 
+            status = true
+        });
+    }
+
+    public async Task<IActionResult> PatchMovieAsync(UpdateMovie updateMovie)
+    {
+        if (updateMovie != null)
+        {
+            var movie = await _context.Movies.FirstOrDefaultAsync(m => m.MovieID == updateMovie.MovieID);
+            movie.Title = updateMovie.Title;
+            movie.Description = updateMovie.Description;
+            movie.ReleaseDate = updateMovie.ReleaseDate;
+            movie.Rating = updateMovie.Rating;
+            movie.ImageUrl = updateMovie.ImageUrl;
+            
+            await _context.SaveChangesAsync();
+            return new OkObjectResult(new
+            {
+                status = true
+            });
+        }
+        return new BadRequestObjectResult(new
+        {
+            status = false
+        });
+    }
+
+    public async Task<IActionResult> DeleteMovieAsync(DeleteMovie deleteMovie)
+    {
+        var movie = await _context.Movies.FirstOrDefaultAsync(m => m.MovieID == deleteMovie.MovieID);
+        _context.Movies.Remove(movie); 
+        await _context.SaveChangesAsync();
+        return new OkObjectResult(new
+        {
             status = true
         });
     }
